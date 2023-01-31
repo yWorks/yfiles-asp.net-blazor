@@ -1,0 +1,8 @@
+/bin
+/obj
+/frontend/node_modules
+.vscode
+.vs
+/wwwroot
+license.json
+package-lock.json

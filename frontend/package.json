@@ -1,0 +1,18 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "watch": "vite build --watch",
+    "preview": "vite preview"
+  },
+  "author": "",
+  "dependencies": {
+    "typescript": "^4.9.4",
+    "vite": "^4.0.4",
+    "yfiles": "file:../../../yFilesLibs/yFiles-for-HTML-Complete-2.5.0.2-Evaluation/lib-dev/yfiles-25.0.2+eval-dev.tgz"
+  }
+}

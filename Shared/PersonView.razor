@@ -1,0 +1,44 @@
+@using yFilesWASM.Hierarchy;
+
+<style>
+    .sidepanel {
+        font-family: Helvetica,Arial,sans-serif;
+    }
+    table {
+        text-align: left;
+    }
+    th {
+        min-width: 100px;
+    }
+</style>
+
+<div class="sidepanel">
+    <h2>Details</h2>
+
+    @if (this.Person != null) 
+    {
+        <table>
+            <tr>
+                <th>First name:</th>
+                <td>@Person.FirstName</td>
+            </tr>
+            <tr>
+                <th>Last name:</th>
+                <td>@Person.LastName</td>
+            </tr>
+            <tr>
+                <th>Address:</th>
+                <td>@Person.Address</td>
+            </tr>
+        </table>
+    }
+    else 
+    {
+        <p>Please select a node!</p>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public Person? Person { get; set; }
+}
