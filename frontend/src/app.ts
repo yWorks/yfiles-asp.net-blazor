@@ -35,7 +35,7 @@ export function initializeGraph(selector: string, dotNetHelper: DotNetHelper) {
         dotNetHelper.invokeMethodAsync('SetSelectedPerson', -1);
     })
 
-    inpMode.addItemClickedListener((sender, args) => {
+    inpMode.addItemClickedListener((_, args) => {
         let id = -1;
 
         // If the clicked item is a node, ...
