@@ -1,6 +1,14 @@
 # yFiles for HTML with Blazor WebAssembly
 
-## Intro
+## Quick Start
+
+1. Clone the repository.
+2. place your license top level in the project
+3. In `frontend` run `npm install`
+4. In `frontend` run `npm run build`
+5. Top level in the project, run `dotnet watch`
+
+## Step-by-Step Setup
 
 This tutorial helps you to create a simple [Blazor](https://blazor.net) WebAssembly web app containing a yFiles [`GraphComponent`](https://docs.yworks.com/yfileshtml/#/api/GraphComponent). The app calls a TypeScript API from a Blazor service, which communicates with the yFiles API. The app creates random people, puts them in a hierarchy and outputs a layouted graph. When clicking a node, the app shows details about the corresponding person. The result looks as follows:
 
@@ -15,7 +23,7 @@ This walkthrough will teach you
 * how to call C# methods from TypeScript.
 * how to use Razor components and data binding for viewing data related to nodes.
 
-## Table of contents
+### Table of contents
 
 * [Setting up the project](#setting-up-the-project)
     * [Requirements](#requirements)
@@ -42,15 +50,15 @@ This walkthrough will teach you
     * [Viewing the data of the selected person](#viewing-the-data-of-the-selected-person)
 * [Conclusion](#conclusion)
 
-## Setting up the project
+### Setting up the project
 
-### Requirements
+#### Requirements
 
 For development, you will need an IDE. In this tutorial, the CLI (.NET 7) will be used so that code editors such as [Visual Studio Code](https://code.visualstudio.com/download) can be used too.
 Hence, [.NET](https://dotnet.microsoft.com/en-us/download/dotnet) is required.
 Furthermore, you need to have [Node.js](https://nodejs.org/en/download/) installed.
 
-### Creating the project
+#### Creating the project
 
 If you want to add yFiles to an existing project, just skip this section.
 
@@ -80,7 +88,7 @@ Object.assign(window, functions)
 <script type="module" src="src/index.ts"></script>
 ```
 
-### Installing TypeScript
+#### Installing TypeScript
 
 In order to setup TypeScript, navigate into `frontend` and run
 
@@ -115,7 +123,7 @@ TypeScript needs a config file `frontend/tsconfig.json` containing
 
 ```
 
-### Installing yFiles
+#### Installing yFiles
 
 yFiles can be installed via npm. In folder `frontend` run
 
@@ -125,7 +133,7 @@ npm install --save <path to yfiles tgz file>
 
 Place a copy of your yFiles license inside the project folder.
 
-### Installing Vite
+#### Installing Vite
 
 To build yFiles, we use the bundler [Vite](https://vitejs.dev).
 Use npm in `frontend` again to install it:
@@ -165,21 +173,21 @@ export default {
 With `emptyOutDir: true` the content of `wwwroot` folder gets cleared on every build.
 Afterwards, `index.html` will be copied to `wwwroot` and the yFiles library will be bundled into `wwwroot/assets`.
 
-### Developing with `tsc` and `dotnet`
+#### Developing with `tsc` and `dotnet`
 
 Changes made in the TypeScript files won't affect the behaviour of the application. To watch for changes, start Vite's file watcher by calling `npm run watch` which automatically transpiles the files to JavaScript.
 
 Now that everything is set up, we can start implementing the yFiles `GraphComponent`.
 
-## Adding a `GraphComponent`
+### Adding a `GraphComponent`
 
 Let's add a `GraphComponent` to a Razor component.
 
-### The general architecture of the project
+#### The general architecture of the project
 
 As we want to initialize the graph, add nodes and edges to it, etc. from C#, we need to call TypeScript functions using [`IJSRuntime`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.jsinterop.ijsruntime?view=aspnetcore-6.0), which then call the yFiles API and modify the graph. Hence, we will create a [Blazor service](https://docs.microsoft.com/en-us/aspnet/core/blazor/fundamentals/dependency-injection?view=aspnetcore-6.0) that does all the communication with TypeScript and that we will then call from a component to build a graph. Furthermore, we need to write TypeScript wrapper functions for all the yFiles features we want to use.
 
-### Creating the TypeScript functions
+#### Creating the TypeScript functions
 
 Note: this will just give you a quick walk through generating a graph with yFiles.
 For details, please refer to our [Getting Started](https://docs.yworks.com/yfileshtml/#/dguide/getting_started). 
@@ -209,7 +217,7 @@ On the `window` instance, we create a new function which takes in a `selector` s
 
 Since the function is registered on `window`, we can call it from the Blazor service.
 
-### Creating the Blazor service
+#### Creating the Blazor service
 
 A Blazor service is a C# class. Blazor creates one instance of that class, which can then be injected into other services or components.
 
@@ -263,7 +271,7 @@ await builder.Build().RunAsync();
 
 ```
 
-### Using the service in a Razor component
+#### Using the service in a Razor component
 
 The `selector` string specifies the `div` element that yFiles should use for rendering the graph. That's why we first have to add a `div` element to the component in `Pages/Index.razor`:
 
@@ -336,9 +344,9 @@ The result shpuld look as follows:
 
 There isn't much to see yet and interaction is limited to viewing since `inputMode` is set to an instance of `GraphViewerInputMode`, however note the yFiles license text in the bottom of the `GraphComponent`. This indicates that yFiles is up and running.
 
-## Communication between C# and TypeScript
+### Communication between C# and TypeScript
 
-### Creating nodes
+#### Creating nodes
 
 Now that we successfully added a `GraphComponent` to the view, let's programmatically create nodes.
 
@@ -435,7 +443,7 @@ Our resulting graph looks as follows:
 
 ![Resulting first graph](img/FirstNodes.png)
 
-### Creating edges
+#### Creating edges
 
 For the edges, it is a similar procedure as with the nodes. First, add a TypeScript function:
 
@@ -501,7 +509,7 @@ And the result:
 
 ![Resulting second graph](img/FirstEdges.png)
 
-### Applying a layout
+#### Applying a layout
 
 yFiles provides some [Automatic layouts](https://docs.yworks.com/yfiles-html/dguide/layout/layout-applying_a_layout.html). We will use the [Hierarchic Layout](https://docs.yworks.com/yfiles-html/api/HierarchicLayout.html) here, as this will come in handy later on.
 
@@ -560,13 +568,13 @@ We get the following result:
 
 ![Applying a hierarchic layout](img/HierarchicLayout.png)
 
-### Further communication
+#### Further communication
 
 As you have seen in this section, the procedure to communicate with yFiles is always the same. Thus, implementing new functionality using the feature-rich yFiles API is very easy. As the purpose of this walkthrough is not to explain the yFiles API, please refer to the [online documentation](https://docs.yworks.com/yfiles-html/index.html) for further reading. 
 
-## Creating a graph
+### Creating a graph
 
-### Creating a hierarchy
+#### Creating a hierarchy
 
 Now that we have implemented the basic structure to communicate with yFiles via a Razor component, let's create a more dynamic graph than the hard coded we had before.
 For that, we will create a hierarchy of people and then display it as a graph. In order to get random names, we will be using [Faker.Net](https://github.com/Kuree/Faker.Net). The library can be installed easily using nuget:
@@ -655,7 +663,7 @@ public class Hierarchy {
 
 The algorithm adds `count` people to the hierarchy. For each person, it randomly chooses another person that still has less than `degree` neighbours. These people then share a link. The algorithm will create a tree because each person only has one link to a prior person and thus, the graph can't contain a cycle.
 
-### Converting the hierarchy to a graph
+#### Converting the hierarchy to a graph
 
 In order to use the `Hierarchy` class in the Razor component, we have to add a using statement on top of the Razor component file since `Hierarchy` is in the namespace `yFilesWASM.Hierarchy`, whereas the Razor component is in `yFilesWASM` (or another namespace, depending on your project's structure).
 
@@ -711,11 +719,11 @@ Either scenario results in a graph as follows. Note that each time you reload th
 
 ![Hierarchic graph](img/HierarchicGraph.png)
 
-## Viewing the data associated with a node
+### Viewing the data associated with a node
 
 In this section, we will create a data panel in which the data associated with the selected node (in this case: the name and the address of the person) are shown.
 
-### Calling .NET methods from TypeScript
+#### Calling .NET methods from TypeScript
 
 The idea is to create a Razor component to view the data. The data is passed to the component by the main component (the component which contains the `GraphComponent`). The problem is that the Razor component has to know which node is currently selected. We want to achieve this by triggering a C# method from TypeScript. Since TypeScript is connected to yFiles, it can listen to click events.
 
@@ -833,7 +841,7 @@ Note that we need to add a [`JSInvokable`](https://docs.microsoft.com/en-us/dotn
 
 Now, every time a node is clicked in the `GraphComponent`, `SelectedPerson` in Razor is set to the corresponding person. If `id` is not found (e.g. if it is set to `-1`), the component will reset the selection by setting `SelectedPerson` to `null`.
 
-### Viewing the data of the selected person
+#### Viewing the data of the selected person
 
 For viewing the data, let's create a new component, which takes in the selected person as a [parameter](https://docs.microsoft.com/en-us/aspnet/core/blazor/components/?view=aspnetcore-6.0#component-parameters) and displays the data (first name, last name and address) if it isn't `null`. Create a file (e.g. `Shared/PersonView.razor`). Add the following code to it:
 
@@ -923,7 +931,7 @@ After these changes, the app should run as wanted and look something like this:
 
 ![The output of the final app](img/FinalApp.png)
 
-## Conclusion
+### Conclusion
 
 Using yFiles in Blazor WebAssembly is very easy. You can effortlessly integrate a `GraphComponent` in your project without having to write clumsy workarounds. Thus, there's no need to compromise to only a small set of yFiles' features. Implementing new functionality is rather straightforward since communication between .NET and TypeScript is natively supported by Blazor WebAssembly.
 
