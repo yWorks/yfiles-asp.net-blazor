@@ -1,6 +1,6 @@
-import { Class, GraphComponent, GraphViewerInputMode, HierarchicLayout, IGraph, INode, LayoutExecutor, License, Rect as yRect } from "yfiles";
+import { GraphComponent, GraphViewerInputMode, HierarchicalLayout, IGraph, INode, LayoutExecutor, License, Rect as yRect } from '@yfiles/yfiles';
 
-import LicenseContent from '../../license.json';
+import LicenseContent from '../yfiles-lib/license.json';
 
 License.value = LicenseContent as any
 
@@ -30,16 +30,16 @@ export function initializeGraph(selector: string, dotNetHelper: DotNetHelper) {
     // Create a GraphViewerInputMode and add a canvasClickedListener and an itemClickedListener to the input mode.
     let inpMode = new GraphViewerInputMode();
     
-    inpMode.addCanvasClickedListener(() => {
+    inpMode.addEventListener('canvas-clicked', () => {
         // If the canvas is clicked (and not an item), reset the SelectedPerson.
         dotNetHelper.invokeMethodAsync('SetSelectedPerson', -1);
     })
 
-    inpMode.addItemClickedListener((_, args) => {
+    inpMode.addEventListener('item-clicked', (args) => {
         let id = -1;
 
         // If the clicked item is a node, ...
-        if (INode.isInstance(args.item)) {
+        if ((args.item instanceof INode)) {
             const node = args.item as INode;
             // ... set the id to the node's id.
             id = getIdFromNode(node)!;
@@ -100,12 +100,12 @@ export function createEdge(nodeId1: number, nodeId2: number) {
 }
 
 // make sure layout module is loaded
-Class.ensure(LayoutExecutor)
+LayoutExecutor.ensure()
 
 export function applyHierarchicLayout() {
     // Applying a hierarchic layout in an animated fashion.
-    gc.morphLayout({
-        layout: new HierarchicLayout(),
-        morphDuration: '0.2s'
+    gc.applyLayoutAnimated({
+        layout: new HierarchicalLayout(),
+        animationDuration: '0.2s'
     });
 }

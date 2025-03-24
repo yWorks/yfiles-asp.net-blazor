@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,8 +11,8 @@
   },
   "author": "",
   "dependencies": {
-    "typescript": "^4.9.4",
-    "vite": "^4.0.4",
-    "yfiles": "file:../../../yFilesLibs/yFiles-for-HTML-Complete-2.5.0.2-Evaluation/lib-dev/yfiles-25.0.2+eval-dev.tgz"
+    "@yfiles/yfiles": "file:./yfiles-lib/yfiles-30.0.0+eval.tgz",
+    "typescript": "~5.6",
+    "vite": "^6.2.0"
   }
 }

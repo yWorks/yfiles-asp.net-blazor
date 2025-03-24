@@ -4,5 +4,6 @@
 .vscode
 .vs
 /wwwroot
+yfiles*.tgz
 license.json
 package-lock.json

@@ -6,7 +6,7 @@
 2. place your license top level in the project
 3. In `frontend` run `npm install`
 4. In `frontend` run `npm run build`
-5. Top level in the project, run `dotnet watch`
+5. Top level in the project, run `dotnet watch --project yfiles-blazor.csproj`
 
 ## Step-by-Step Setup
 
