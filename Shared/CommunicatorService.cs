@@ -21,7 +21,7 @@ public class CommunicatorService
     }
 
     // This method invokes the 'createNode' function.
-    public async Task<int> CreateNodeAsync(string label, Rect? rect)
+    public async Task<int> CreateNodeAsync(string label, Rectangle rect)
     {
         return await JS.InvokeAsync<int>("createNode", label, rect);
     }
@@ -32,9 +32,9 @@ public class CommunicatorService
         await JS.InvokeVoidAsync("createEdge", nodeId1, nodeId2);
     }
 
-    // This method invokes the 'applyHierarchicLayout' function.
-    public async Task ApplyHierarchicLayout()
+    // This method invokes the 'applyHierarchicalLayout' function.
+    public async Task ApplyHierarchicalLayout()
     {
-        await JS.InvokeVoidAsync("applyHierarchicLayout");
+        await JS.InvokeVoidAsync("applyHierarchicalLayout");
     }
 }

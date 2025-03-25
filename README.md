@@ -3,27 +3,27 @@
 ## Quick Start
 
 1. Clone the repository.
-2. place your license top level in the project
-3. In `frontend` run `npm install`
-4. In `frontend` run `npm run build`
-5. Top level in the project, run `dotnet watch --project yfiles-blazor.csproj`
+2. Place your yFiles for HTML `.tgz` and your license in folder `frontend/yfiles-lib`.
+3. In `frontend`, run `npm install`.
+4. In `frontend`, run `npm run build`.
+5. Top-level in the project, run `dotnet watch --project yfiles-blazor.csproj`.
 
 ## Step-by-Step Setup
 
-This tutorial helps you to create a simple [Blazor](https://blazor.net) WebAssembly web app containing a yFiles [`GraphComponent`](https://docs.yworks.com/yfileshtml/#/api/GraphComponent). The app calls a TypeScript API from a Blazor service, which communicates with the yFiles API. The app creates random people, puts them in a hierarchy and outputs a layouted graph. When clicking a node, the app shows details about the corresponding person. The result looks as follows:
+This tutorial helps you create a simple [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor) WebAssembly web app containing a yFiles [`GraphComponent`](https://docs.yworks.com/yfileshtml/#/api/GraphComponent). The app calls a TypeScript API from a Blazor service, which communicates with the yFiles API. The app creates random people, puts them in a hierarchy, and outputs a layouted graph. When clicking a node, the app shows details about the corresponding person. The result looks as follows:
 
 ![Result of the app](img/FinalApp.png)
 
 This walkthrough will teach you
 
-* how to use TypeScript in Blazor.
-* how to call the yFiles API by using TypeScript wrapper functions.
-* how to connect to TypeScript and call TypeScript functions from C#.
-* how to create a hierarchy and load it into a graph.
-* how to call C# methods from TypeScript.
-* how to use Razor components and data binding for viewing data related to nodes.
+* how to use TypeScript in Blazor,
+* how to call the yFiles API by using TypeScript wrapper functions,
+* how to connect to TypeScript and call TypeScript functions from C#,
+* how to create a hierarchy and load it into a graph,
+* how to call C# methods from TypeScript,
+* and how to use Razor components and data binding for viewing data related to nodes.
 
-### Table of contents
+### Table of Contents
 
 * [Setting up the project](#setting-up-the-project)
     * [Requirements](#requirements)
@@ -54,15 +54,13 @@ This walkthrough will teach you
 
 #### Requirements
 
-For development, you will need an IDE. In this tutorial, the CLI (.NET 7) will be used so that code editors such as [Visual Studio Code](https://code.visualstudio.com/download) can be used too.
-Hence, [.NET](https://dotnet.microsoft.com/en-us/download/dotnet) is required.
-Furthermore, you need to have [Node.js](https://nodejs.org/en/download/) installed.
+You need to have [.NET](https://dotnet.microsoft.com/en-us/download/dotnet) and [Node.js](https://nodejs.org/en/download/) installed. An IDE such as [Visual Studio Code](https://code.visualstudio.com/download) is recommended.
 
 #### Creating the project
 
 If you want to add yFiles to an existing project, just skip this section.
 
-Let's start by creating a new Blazor WebAssembly app. First, create a new directory. Then, run `dotnet new blazorwasm` in your project's directory. This will create the default app, which uses the [`blazorwasm`](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-new-sdk-templates#blazorwasm) template. To start the project, run `dotnet watch`. This will enable hot reload, which allows you to view your changes directly in the browser without having to recompile manually.
+Let's start by creating a new Blazor WebAssembly app. First, create a new directory. Then, run `dotnet new blazorwasm` in your project's directory. This will create the default app, which uses the [`blazorwasm`](https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-new-sdk-templates#blazorwasm) template. To start the project, run `dotnet watch`. This will enable hot reload, which allows you to view your changes directly in the browser without having to recompile manually.
 
 In the browser, the app should look something like this:
 
@@ -70,19 +68,19 @@ In the browser, the app should look something like this:
 
 Go ahead and create the following elements:
 
-* folder `frontend`
-* file `frontend/src/app.ts`
-* file `frontend/src/index.ts` and paste the content of [index.ts](frontend/index.ts)
-* file `frontend/index.html` and paste the content of [index.html](frontend/index.html)
+* Folder `frontend`
+* File `frontend/src/app.ts`
+* File `frontend/src/index.ts` and paste the content of [index.ts](frontend/index.ts)
+* File `frontend/index.html` and paste the content of [index.html](frontend/index.html)
 
-The `index.ts` makes any exported method in `app.ts` available on `window`
+The `index.ts` makes any exported method in `app.ts` available on `window`:
 ```js
 import * as functions from './app'
-// provide any exported functions on window
+// Provide any exported functions on window
 Object.assign(window, functions)
 ```
 
- and is then referenced in the `index.html` file:
+and is then referenced in the `index.html` file:
 
 ```html
 <script type="module" src="src/index.ts"></script>
@@ -90,7 +88,7 @@ Object.assign(window, functions)
 
 #### Installing TypeScript
 
-In order to setup TypeScript, navigate into `frontend` and run
+In order to set up TypeScript, navigate into `frontend` and run
 
 ```
 npm init
@@ -120,12 +118,11 @@ TypeScript needs a config file `frontend/tsconfig.json` containing
   },
   "include": ["src"]
 }
-
 ```
 
 #### Installing yFiles
 
-yFiles can be installed via npm. In folder `frontend` run
+yFiles can be installed via npm. In folder `frontend`, run
 
 ```
 npm install --save <path to yfiles tgz file>
@@ -135,7 +132,7 @@ Place a copy of your yFiles license inside the project folder.
 
 #### Installing Vite
 
-To build yFiles, we use the bundler [Vite](https://vitejs.dev).
+To build yFiles, we use the bundler [Vite](https://vite.dev/).
 Use npm in `frontend` again to install it:
 
 ```
@@ -154,8 +151,8 @@ To declare build scripts, add the following to `package.json`:
 }
 ```
 
-Furthermore we need to specify the output directory where Vite shall place the compiled files.
-In our case this is the `wwwroot` folder which will be created one folder above `frontend` after the first build and serves as root of the website.
+Furthermore, we need to specify the output directory where Vite shall place the compiled files.
+In our case, this is the `wwwroot` folder which will be created one folder above `frontend` after the first build and serves as root of the website.
 Optionally, you can set a watch to the build config which automatically rebuilds on every change in the TypeScript source files.
 Therefore, create a file `frontend/vite.config.js` and add
 
@@ -170,12 +167,12 @@ export default {
 }
 ```
 
-With `emptyOutDir: true` the content of `wwwroot` folder gets cleared on every build.
+With `emptyOutDir: true`, the content of `wwwroot` folder gets cleared on every build.
 Afterwards, `index.html` will be copied to `wwwroot` and the yFiles library will be bundled into `wwwroot/assets`.
 
 #### Developing with `tsc` and `dotnet`
 
-Changes made in the TypeScript files won't affect the behaviour of the application. To watch for changes, start Vite's file watcher by calling `npm run watch` which automatically transpiles the files to JavaScript.
+Changes made in the TypeScript files won't affect the behavior of the application. To watch for changes, start Vite's file watcher by calling `npm run watch`, which automatically transpiles the files to JavaScript.
 
 Now that everything is set up, we can start implementing the yFiles `GraphComponent`.
 
@@ -185,7 +182,7 @@ Let's add a `GraphComponent` to a Razor component.
 
 #### The general architecture of the project
 
-As we want to initialize the graph, add nodes and edges to it, etc. from C#, we need to call TypeScript functions using [`IJSRuntime`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.jsinterop.ijsruntime?view=aspnetcore-6.0), which then call the yFiles API and modify the graph. Hence, we will create a [Blazor service](https://docs.microsoft.com/en-us/aspnet/core/blazor/fundamentals/dependency-injection?view=aspnetcore-6.0) that does all the communication with TypeScript and that we will then call from a component to build a graph. Furthermore, we need to write TypeScript wrapper functions for all the yFiles features we want to use.
+As we want to initialize the graph, add nodes and edges to it, etc. from C#, we need to call TypeScript functions using [`IJSRuntime`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.jsinterop.ijsruntime?view=aspnetcore-8.0), which then call the yFiles API and modify the graph. Hence, we will create a [Blazor service](https://learn.microsoft.com/en-us/aspnet/core/blazor/fundamentals/dependency-injection?view=aspnetcore-8.0) that does all the communication with TypeScript and that we will then call from a component to build a graph. Furthermore, we need to write TypeScript wrapper functions for all the yFiles features we want to use.
 
 #### Creating the TypeScript functions
 
@@ -195,13 +192,11 @@ For details, please refer to our [Getting Started](https://docs.yworks.com/yfile
 Let's start by initializing the `GraphComponent`. But first, we have to import the yFiles license in `frontend/src/app.ts`.
 
 ```ts
-import {
-    License
-} from 'yfiles';
+import { License } from '@yfiles/yfiles';
 
-License.value = {
-    /* <your license data here> */
-}
+import LicenseContent from './path/to/your/license.json';
+
+License.value = LicenseContent as any
 ```
 
 Then we declare a function which instantiates a `GraphComponent` in `app.ts`:
@@ -268,7 +263,6 @@ builder.Services.AddSingleton<CommunicatorService>();
 ...
 
 await builder.Build().RunAsync();
-
 ```
 
 #### Using the service in a Razor component
@@ -338,7 +332,7 @@ To simplify the overall page layout, remove the `DefaultLayout` of the main rout
 </Router>
 ```
 
-The result shpuld look as follows:
+The result should look as follows:
 
 ![First Graph](img/FirstGraph.png)
 
@@ -353,40 +347,41 @@ Now that we successfully added a `GraphComponent` to the view, let's programmati
 So first, we will need to add a new TypeScript function in `app.ts`:
 
 ```TypeScript
-interface Rect {
+// A rectangle type that matches the one used by CommunicatorService.cs
+type Rectangle = {
     x: number,
     y: number,
     width: number,
     height: number
 }
 
-// 'nodes' keeps the ids with the corresponding nodes.
-const nodes: [number, INode][] = [];
+// Array of all nodes with their id stored in their tag.
+const nodes: INode[] = []
 
-let nodeIdCount = 0;
-export function createNode(label: string, rect: Rect | null): number {
-    // Create a rect at the specified position with the specified width and height.
-    const node = rect === null 
-        ? graph.createNode()
-        : graph.createNode(new yRect(rect.x, rect.y, rect.width, rect.height));
+let nodeIdCounter = -1;
+export function createNode(label: string, rect: Rectangle): number {
+    // Create a node at the specified position with the specified width and height. Store an id in the node's tag.
+    nodeIdCounter++;
+    const node = graph.createNode({ layout: new Rect(rect.x, rect.y, rect.width, rect.height), tag: nodeIdCounter });
     
     // Add a label to the node.
     graph.addLabel(node, label);
 
-    // Assign an id to the node, store it and return the id.
-    let id = nodeIdCount++;
-    nodes.push([id, node]);
-    return id;
+    // Store the newly created node in the array of all nodes
+    nodes.push(node);
+
+    // Return the node's id to allow the backend to create edges between nodes
+    return nodeIdCounter;
 }
 ```
 
-The function takes in a label and a `Rect`, which specifies the position and size of the node. If `rect` is `null`, no position and size are passed when calling [`createNode`](https://docs.yworks.com/yfiles-html/api/IGraph.html#createNode(layout,style,tag)). Additionally, we create an id for the node, which can later be used in C# to reference a node.
+The function takes in a label and a `Rectangle`, which specifies the position and size of the node. Additionally, we create an id for the node, which can later be used in C# to reference a node.
 
 Now, we still need to add logic to the `CommunicatorService`:
 
 ```C#
 // This method invokes the 'createNode' function.
-public async Task<int> CreateNodeAsync(string label, Rect? rect)
+public async Task<int> CreateNodeAsync(string label, Rectangle rect)
 {
     return await JS.InvokeAsync<int>("createNode", label, rect);
 }
@@ -394,29 +389,29 @@ public async Task<int> CreateNodeAsync(string label, Rect? rect)
 
 `CreateNodeAsync` returns the id of the newly created node.
 
-As you can see, there is a reference to `Rect` in `CreateNodeAsync`, which will be specified in a new file `Rect.cs`:
+As you can see, there is a reference to `Rectangle` in `CreateNodeAsync`, which will be specified in a new file `Rectangle.cs`:
 
 ```C#
 namespace yFilesWASM.Communicator;
 
-public struct Rect
+public struct Rectangle
 {
     public double X { get; set; }
     public double Y { get; set; }
     public double Width { get; set; }
     public double Height { get; set; }
 
-    public Rect(double x, double y, double width, double height)
+    public Rectangle(double x, double y, double width, double height)
     {
-        this.X = x;
-        this.Y = y;
-        this.Width = width;
-        this.Height = height;
+        X = x;
+        Y = y;
+        Width = width;
+        Height = height;
     }
 }
 ```
 
-The `Rect` struct in `Rect.cs` has exactly the same properties (apart from capitalization) as the `Rect` interface in `app.ts`. Thus, Blazor is able to serialize the `rect` passed to the TypeScript function in `CreateNodeAsync` and TypeScript can then read it as an object of the type `Rect`. Generally, you can use any JSON-serializable object as an argument of [`InvokeAsync<T>`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.jsinterop.jsruntime.invokeasync?view=aspnetcore-6.0) or [`InvokeVoidAsync`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.jsinterop.jsruntimeextensions.invokevoidasync?view=aspnetcore-6.0). Since `rect` in `CreateNodeAsync` is nullable, we can provide `null` as a valid argument and omit custom positioning.
+The `Rectangle` struct in `Rectangle.cs` has exactly the same properties (apart from capitalization) as the `Rectangle` interface in `app.ts`. Thus, Blazor is able to serialize the `rect` passed to the TypeScript function in `CreateNodeAsync` and TypeScript can then read it as an object of the type `Rectangle`. Generally, you can use any JSON-serializable object as an argument of [`InvokeAsync<T>`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.jsinterop.jsruntime.invokeasync?view=aspnetcore-8.0) or [`InvokeVoidAsync`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.jsinterop.jsruntimeextensions.invokevoidasync?view=aspnetcore-8.0).
 `InvokeAsync<T>` is generic and returns the return value of the TypeScript function by parsing it to the type `T`.
 
 Let's add some hard coded nodes from our Razor component in the `OnAfterRenderAsync` method to test our code:
@@ -430,7 +425,7 @@ protected override async Task OnAfterRenderAsync(bool firstRender)
 
         // Adding some nodes.
         int nodeId1 = await communicator.CreateNodeAsync("Hello world!", new Rect(100, 200, 30, 70));
-        int nodeId2 = await communicator.CreateNodeAsync("", null);
+        int nodeId2 = await communicator.CreateNodeAsync("", new Rect(0, 0, 30, 30));
         for (var i = 0; i < 5; i++)
         {
             await communicator.CreateNodeAsync(i.ToString(), new Rect((i + 1) * 50, 20 * i, 40, 20));
@@ -448,20 +443,10 @@ Our resulting graph looks as follows:
 For the edges, it is a similar procedure as with the nodes. First, add a TypeScript function:
 
 ```TypeScript
-// Function, which returns the corresponding node to an id.
-function getNodeFromId(id: number): INode | undefined {
-    for (let i of nodes) {
-        if (i[0] === id) {
-            return i[1];
-        }
-    }
-    return undefined;
-}
-
 export function createEdge(nodeId1: number, nodeId2: number) {
     // Get the nodes from the ids:
-    const node1 = getNodeFromId(nodeId1);
-    const node2 = getNodeFromId(nodeId2);
+    const node1 = nodes.find(n => n.tag === nodeId1);
+    const node2 = nodes.find(n => n.tag === nodeId2);
 
     // Add an edge if the nodes exist.
     if (node1 !== undefined && node2 !== undefined) {
@@ -470,7 +455,7 @@ export function createEdge(nodeId1: number, nodeId2: number) {
 }
 ```
 
-The function calls [`createEdge`](https://docs.yworks.com/yfiles-html/api/IGraph.html#createEdge(sourcePort,targetPort,style,tag)) with the nodes as paramters. Since we stored the nodes' ids in `nodes`, we can now get the corresponding nodes to create edges.
+The function calls `createEdge` with the nodes as parameters. Since we stored the nodes' ids in their tag, we can now get the corresponding nodes to create edges.
 
 Then, add these lines of code to the `CommunicatorService`:
 
@@ -493,9 +478,9 @@ protected override async Task OnAfterRenderAsync(bool firstRender)
 
         // Adding some nodes and edges.
         int nodeId1 = await communicator.CreateNodeAsync("Hello world!", new Rect(100, 200, 30, 70));
-        int nodeId2 = await communicator.CreateNodeAsync("", null);
+        int nodeId2 = await communicator.CreateNodeAsync("", new Rect(0, 0, 30, 30));
         await communicator.CreateEdgeAsync(nodeId1, nodeId2);
-        
+
         for (var i = 0; i < 5; i++)
         {
             int nodeId = await communicator.CreateNodeAsync(i.ToString(), new Rect((i + 1) * 50, 20 * i, 40, 20));
@@ -511,19 +496,19 @@ And the result:
 
 #### Applying a layout
 
-yFiles provides some [Automatic layouts](https://docs.yworks.com/yfiles-html/dguide/layout/layout-applying_a_layout.html). We will use the [Hierarchic Layout](https://docs.yworks.com/yfiles-html/api/HierarchicLayout.html) here, as this will come in handy later on.
+yFiles provides some [Automatic layouts](https://docs.yworks.com/yfileshtml/#/dguide/layout-applying_a_layout). We will use the [Hierarchical Layout](https://docs.yworks.com/yfileshtml/#/api/HierarchicalLayout) here, as this will come in handy later on.
 
 In the `app.ts` file, add:
 
 ```TypeScript
-// make sure layout module is loaded
-Class.ensure(LayoutExecutor)
+// Make sure layout module is loaded
+LayoutExecutor.ensure()
 
-export function applyHierarchicLayout() {
-    // Applying a hierarchic layout in an animated fashion.
-    gc.morphLayout({
-        layout: new HierarchicLayout(),
-        morphDuration: '0.2s'
+export function applyHierarchicalLayout() {
+    // Applying a hierarchical layout in an animated fashion.
+    gc.applyLayoutAnimated({
+        layout: new HierarchicalLayout(),
+        animationDuration: '0.2s'
     });
 }
 ```
@@ -531,10 +516,10 @@ export function applyHierarchicLayout() {
 Then, add to the `CommunicatorService`:
 
 ```C#
-// This method invokes the 'applyHierarchicLayout' function.
-public async Task ApplyHierarchicLayout()
+// This method invokes the 'applyHierarchicalLayout' function.
+public async Task ApplyHierarchicalLayout()
 {
-    await JS.InvokeVoidAsync("applyHierarchicLayout");
+    await JS.InvokeVoidAsync("applyHierarchicalLayout");
 }
 ```
 
@@ -549,7 +534,7 @@ protected override async Task OnAfterRenderAsync(bool firstRender)
 
         // Adding some nodes and edges.
         int nodeId1 = await communicator.CreateNodeAsync("Hello world!", new Rect(100, 200, 30, 70));
-        int nodeId2 = await communicator.CreateNodeAsync("", null);
+        int nodeId2 = await communicator.CreateNodeAsync("", new Rect(0, 0, 30, 30));
         await communicator.CreateEdgeAsync(nodeId1, nodeId2);
 
         for (var i = 0; i < 5; i++)
@@ -558,19 +543,19 @@ protected override async Task OnAfterRenderAsync(bool firstRender)
             await communicator.CreateEdgeAsync(nodeId, nodeId1);
         }
 
-        // Apply a hierarchic layout.
-        await communicator.ApplyHierarchicLayout();
+        // Apply a hierarchical layout.
+        await communicator.ApplyHierarchicalLayout();
     }
 }
 ```
 
 We get the following result:
 
-![Applying a hierarchic layout](img/HierarchicLayout.png)
+![Applying a hierarchical layout](img/HierarchicalLayout.png)
 
 #### Further communication
 
-As you have seen in this section, the procedure to communicate with yFiles is always the same. Thus, implementing new functionality using the feature-rich yFiles API is very easy. As the purpose of this walkthrough is not to explain the yFiles API, please refer to the [online documentation](https://docs.yworks.com/yfiles-html/index.html) for further reading. 
+As you have seen in this section, the procedure to communicate with yFiles is always the same. Thus, implementing new functionality using the feature-rich yFiles API is very easy. As the purpose of this walkthrough is not to explain the yFiles API, please refer to the [online documentation](https://docs.yworks.com/yfileshtml/#/home) for further reading.
 
 ### Creating a graph
 
@@ -661,7 +646,7 @@ public class Hierarchy {
 }
 ```
 
-The algorithm adds `count` people to the hierarchy. For each person, it randomly chooses another person that still has less than `degree` neighbours. These people then share a link. The algorithm will create a tree because each person only has one link to a prior person and thus, the graph can't contain a cycle.
+The algorithm adds `count` people to the hierarchy. For each person, it randomly chooses another person that still has less than `degree` neighbors. These people then share a link. The algorithm will create a tree because each person only has one link to a prior person and thus, the graph can't contain a cycle.
 
 #### Converting the hierarchy to a graph
 
@@ -695,8 +680,8 @@ private async Task LoadHierarchyAsync()
         await communicator.CreateEdgeAsync(this.Dict[link.Item1], this.Dict[link.Item2]);
     }
 
-    // Finally, apply a hierarchic layout.
-    await communicator.ApplyHierarchicLayout();
+    // Finally, apply a hierarchical layout.
+    await communicator.ApplyHierarchicalLayout();
 }
 
 protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -711,13 +696,13 @@ protected override async Task OnAfterRenderAsync(bool firstRender)
 }
 ```
 
-`Dict` contains the people with the corresponding id of their node. That way, we can associate each person with the node in the graph and vice versa.
+`persons` contains the people with the corresponding id of their node. That way, we can associate each person with the node in the graph and vice versa.
 
 Optionally, one could execute the `LoadHierarchyAsync` method when a button is clicked instead. Razor allows you to do exactly that by adding `@onclick="this.LoadHierarchyAsync"` on the button in the template.
 
 Either scenario results in a graph as follows. Note that each time you reload the page, a new graph with new names is generated.
 
-![Hierarchic graph](img/HierarchicGraph.png)
+![Hierarchical graph](img/HierarchicalGraph.png)
 
 ### Viewing the data associated with a node
 
@@ -727,7 +712,7 @@ In this section, we will create a data panel in which the data associated with t
 
 The idea is to create a Razor component to view the data. The data is passed to the component by the main component (the component which contains the `GraphComponent`). The problem is that the Razor component has to know which node is currently selected. We want to achieve this by triggering a C# method from TypeScript. Since TypeScript is connected to yFiles, it can listen to click events.
 
-Blazor provides a mechanism for communication from TypeScript to C#. You can use the static class [`DotNetObjectReference`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.jsinterop.dotnetobjectreference?view=aspnetcore-6.0) and the generic class [`DotNetObjectReference<TValue>`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.jsinterop.dotnetobjectreference-1?view=aspnetcore-6.0) to pass a .NET object to TypeScript. In TypeScript, you can then call [`invokeMethodAsync<T>`](https://docs.microsoft.com/en-us/aspnet/core/blazor/javascript-interoperability/call-dotnet-from-javascript?view=aspnetcore-6.0#invoke-an-instance-net-method) on the .NET object reference to invoke a method on the object.
+Blazor provides a mechanism for communication from TypeScript to C#. You can use the static class [`DotNetObjectReference`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.jsinterop.dotnetobjectreference?view=aspnetcore-8.0) and the generic class [`DotNetObjectReference<TValue>`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.jsinterop.dotnetobjectreference-1?view=aspnetcore-8.0) to pass a .NET object to TypeScript. In TypeScript, you can then call [`invokeMethodAsync<T>`](https://learn.microsoft.com/en-us/aspnet/core/blazor/javascript-interoperability/call-dotnet-from-javascript?view=aspnetcore-8.0#invoke-an-instance-net-method) on the .NET object reference to invoke a method on the object.
 
 In TypeScript when the `GraphComponent` is created, we want to add a listener which is executed each time a node is clicked. The listener then calls the .NET method passing through the id of the clicked node. Hence, we need to pass the .NET object reference to TypeScript already when initializing the graph. Therefore, we have to modify the `initializeGraph` function in `app.ts`:
 
@@ -737,50 +722,40 @@ interface DotNetHelper {
     invokeMethodAsync: <T>(methodName: string, ...args: any[]) => Promise<T>
 }
 
-// Function, which returns the corresponding id to a node.
-function getIdFromNode(node: INode): number | undefined {
-    for (let i of nodes) {
-        if (i[1] === node) {
-            return i[0];
-        }
-    }
-    return undefined;
-}
-
 export function initializeGraph(selector: string, dotNetHelper: DotNetHelper) {
     // First, initialize the graph:
     gc = new GraphComponent(selector);
     graph = gc.graph;
 
-    // Create a GraphViewerInputMode and add a canvasClickedListener and an itemClickedListener to the input mode.
-    let inpMode = new GraphViewerInputMode();
-    
-    inpMode.addCanvasClickedListener(() => {
+    // Create a GraphViewerInputMode, add a canvasClickedListener and an itemClickedListener to the input mode.
+    const inputMode = new GraphViewerInputMode();
+
+    inputMode.addEventListener('canvas-clicked', () => {
         // If the canvas is clicked (and not an item), reset the SelectedPerson.
         dotNetHelper.invokeMethodAsync('SetSelectedPerson', -1);
     })
 
-    inpMode.addItemClickedListener((sender, args) => {
+    inputMode.addEventListener('item-clicked', (args) => {
         let id = -1;
 
         // If the clicked item is a node, ...
-        if (INode.isInstance(args.item)) {
+        if ((args.item instanceof INode)) {
             const node = args.item as INode;
             // ... set the id to the node's id.
-            id = getIdFromNode(node)!;
+            id = parseInt(node.tag);
         }
 
         // Then call the according .NET method on the .NET object.
         dotNetHelper.invokeMethodAsync('SetSelectedPerson', id);
     })
     
-    gc.inputMode = inpMode;
+    gc.inputMode = inputMode;
 }
 ```
 
 `invokeMethodAsync<T>` takes in the method name as a string and then the parameters of the method. Note that the arguments have to be JSON-serializable.
 
-The new `initializeGraph` function registers listeners on the `GraphViewerInputMode`. First, if the canvas is clicked and not an item, we want to reset the selected node. The `SetSelectedPerson` method has the id of the node as a pramater whose person should be selected. Since the ids range from `0` upwards, `-1` is an invalid id and should result in resetting the selection.
+The new `initializeGraph` function registers listeners on the `GraphViewerInputMode`. First, if the canvas is clicked and not an item, we want to reset the selected node. The `SetSelectedPerson` method has the id of the node as a parameter whose person should be selected. Since the ids range from `0` upwards, `-1` is an invalid id and should result in resetting the selection.
 
 Second, a listener is registered which is emitted when an item is clicked. If the item is a node, we will use the node's id for `SetSelectedPerson`, otherwise `-1`.
 
@@ -823,7 +798,7 @@ private Person? SelectedPerson = null;
 public void SetSelectedPerson(int id)
 {
     // Loop through the people with their ids and find out the selected person.
-    foreach (var i in this.Dict)
+    foreach (var i in this.persons)
     {
         if (i.Value == id)
         {
@@ -837,13 +812,13 @@ public void SetSelectedPerson(int id)
 }
 ```
 
-Note that we need to add a [`JSInvokable`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.jsinterop.jsinvokableattribute?view=aspnetcore-6.0) attribute to the `SetSelectedPerson` method. That way, the method can be called from JavaScript/TypeScript.
+Note that we need to add a [`JSInvokable`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.jsinterop.jsinvokableattribute?view=aspnetcore-8.0) attribute to the `SetSelectedPerson` method. That way, the method can be called from JavaScript/TypeScript.
 
 Now, every time a node is clicked in the `GraphComponent`, `SelectedPerson` in Razor is set to the corresponding person. If `id` is not found (e.g. if it is set to `-1`), the component will reset the selection by setting `SelectedPerson` to `null`.
 
 #### Viewing the data of the selected person
 
-For viewing the data, let's create a new component, which takes in the selected person as a [parameter](https://docs.microsoft.com/en-us/aspnet/core/blazor/components/?view=aspnetcore-6.0#component-parameters) and displays the data (first name, last name and address) if it isn't `null`. Create a file (e.g. `Shared/PersonView.razor`). Add the following code to it:
+For viewing the data, let's create a new component, which takes in the selected person as a [parameter](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/?view=aspnetcore-8.0#component-parameters) and displays the data (first name, last name and address) if it isn't `null`. Create a file (e.g. `Shared/PersonView.razor`). Add the following code to it:
 
 ```html
 @using yFilesWASM.Hierarchy;
@@ -892,7 +867,7 @@ For viewing the data, let's create a new component, which takes in the selected 
 }
 ```
 
-The component simply renders the person's properties in a HTML table element. For the `Person` class, we need to use the `yFilesWASM.Hierarchy` namespace. Additionally, `Person` needs a [`Parameter` attribute](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.components.parameterattribute?view=aspnetcore-6.0) so that we can assign the person directly from the template of the main component.
+The component simply renders the person's properties in a HTML table element. For the `Person` class, we need to use the `yFilesWASM.Hierarchy` namespace. Additionally, `Person` needs a [`Parameter` attribute](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.components.parameterattribute?view=aspnetcore-8.0) so that we can assign the person directly from the template of the main component.
 
 Now, we still need to include the component in the main component:
 
@@ -906,9 +881,9 @@ Now, we still need to include the component in the main component:
 
 As you can see, the `style` attribute on the `#graphComponent` `div` has been modified. That is because we want the `PersonView` to be aligned on the right side next to the `GraphComponent`.
 
-Even though the code looks complete now, Blazor still faces us with a challenge. Selecting a node doesn't result in any change in the `PersonView` yet, although `SelectedPerson` in the main component is set to the right person. This is due to [Blazors change detection](https://docs.microsoft.com/en-us/aspnet/core/blazor/components/lifecycle?view=aspnetcore-6.0). Apparently, selecting a node does **not** trigger the change detection. Thus, the data binding on the `PersonView` (`@this.SelectedPerson`) doesn't update. Moreover, the `PersonView`'s `Person` parameter won't be set to the new `SelectedPerson` and will stay `null` or the previous value resulting in no change in the view.
+Even though the code looks complete now, Blazor still faces us with a challenge. Selecting a node doesn't result in any change in the `PersonView` yet, although `SelectedPerson` in the main component is set to the right person. This is due to [Blazors change detection](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/lifecycle?view=aspnetcore-8.0). Apparently, selecting a node does **not** trigger the change detection. Thus, the data binding on the `PersonView` (`@this.SelectedPerson`) doesn't update. Moreover, the `PersonView`'s `Person` parameter won't be set to the new `SelectedPerson` and will stay `null` or the previous value resulting in no change in the view.
 
-To solve this issue, we have to trigger the change detection manually using [`StateHasChanged()`](https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged?view=aspnetcore-6.0). Therefore, the `SelectedPerson` property in the main component needs to be changed like so:
+To solve this issue, we have to trigger the change detection manually using [`StateHasChanged()`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.components.componentbase.statehaschanged?view=aspnetcore-8.0). Therefore, the `SelectedPerson` property in the main component needs to be changed like so:
 
 ```C#
 // Store the selected person.
@@ -941,7 +916,7 @@ In this walkthrough, the data to be visualized was created directly in the brows
 
 MIT License
 
-Copyright (c) 2023 yWorks GmbH
+Copyright (c) 2025 yWorks GmbH
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

@@ -1,4 +1,4 @@
-import { GraphComponent, GraphViewerInputMode, HierarchicalLayout, IGraph, INode, LayoutExecutor, License, Rect as yRect } from '@yfiles/yfiles';
+import { GraphComponent, GraphViewerInputMode, HierarchicalLayout, IGraph, INode, LayoutExecutor, License, Rect } from '@yfiles/yfiles';
 
 import LicenseContent from '../yfiles-lib/license.json';
 
@@ -12,86 +12,67 @@ interface DotNetHelper {
     invokeMethodAsync: <T>(methodName: string, ...args: any[]) => Promise<T>
 }
 
-// Function, which returns the corresponding id to a node.
-function getIdFromNode(node: INode): number | undefined {
-    for (let i of nodes) {
-        if (i[1] === node) {
-            return i[0];
-        }
-    }
-    return undefined;
-}
-
 export function initializeGraph(selector: string, dotNetHelper: DotNetHelper) {
     // First, initialize the graph:
     gc = new GraphComponent(selector);
     graph = gc.graph;
 
-    // Create a GraphViewerInputMode and add a canvasClickedListener and an itemClickedListener to the input mode.
-    let inpMode = new GraphViewerInputMode();
-    
-    inpMode.addEventListener('canvas-clicked', () => {
+    // Create a GraphViewerInputMode, add a canvasClickedListener and an itemClickedListener to the input mode.
+    const inputMode = new GraphViewerInputMode();
+
+    inputMode.addEventListener('canvas-clicked', () => {
         // If the canvas is clicked (and not an item), reset the SelectedPerson.
         dotNetHelper.invokeMethodAsync('SetSelectedPerson', -1);
     })
 
-    inpMode.addEventListener('item-clicked', (args) => {
+    inputMode.addEventListener('item-clicked', (args) => {
         let id = -1;
 
         // If the clicked item is a node, ...
         if ((args.item instanceof INode)) {
             const node = args.item as INode;
             // ... set the id to the node's id.
-            id = getIdFromNode(node)!;
+            id = parseInt(node.tag);
         }
 
         // Then call the according .NET method on the .NET object.
         dotNetHelper.invokeMethodAsync('SetSelectedPerson', id);
     })
     
-    gc.inputMode = inpMode;
+    gc.inputMode = inputMode;
 }
 
-interface Rect {
+// A rectangle type that matches the one used by CommunicatorService.cs
+type Rectangle = {
     x: number,
     y: number,
     width: number,
     height: number
 }
 
-// 'nodes' keeps the ids with the corresponding nodes.
-const nodes: [number, INode][] = [];
+// Array of all nodes with their id stored in their tag.
+const nodes: INode[] = []
 
-let nodeIdCount = 0;
-export function createNode(label: string, rect: Rect | null): number {
-    // Create a rect at the specified position with the specified width and height.
-    const node = rect === null 
-        ? graph.createNode()
-        : graph.createNode(new yRect(rect.x, rect.y, rect.width, rect.height));
+let nodeIdCounter = -1;
+export function createNode(label: string, rect: Rectangle): number {
+    // Create a node at the specified position with the specified width and height. Store an id in the node's tag.
+    nodeIdCounter++;
+    const node = graph.createNode({ layout: new Rect(rect.x, rect.y, rect.width, rect.height), tag: nodeIdCounter });
     
     // Add a label to the node.
     graph.addLabel(node, label);
 
-    // Assign an id to the node, store it and return the id.
-    let id = nodeIdCount++;
-    nodes.push([id, node]);
-    return id;
-}
+    // Store the newly created node in the array of all nodes
+    nodes.push(node);
 
-// Function, which returns the corresponding node to an id.
-function getNodeFromId(id: number): INode | undefined {
-    for (let i of nodes) {
-        if (i[0] === id) {
-            return i[1];
-        }
-    }
-    return undefined;
+    // Return the node's id to allow the backend to create edges between nodes
+    return nodeIdCounter;
 }
 
 export function createEdge(nodeId1: number, nodeId2: number) {
     // Get the nodes from the ids:
-    const node1 = getNodeFromId(nodeId1);
-    const node2 = getNodeFromId(nodeId2);
+    const node1 = nodes.find(n => n.tag === nodeId1);
+    const node2 = nodes.find(n => n.tag === nodeId2);
 
     // Add an edge if the nodes exist.
     if (node1 !== undefined && node2 !== undefined) {
@@ -99,11 +80,11 @@ export function createEdge(nodeId1: number, nodeId2: number) {
     }
 }
 
-// make sure layout module is loaded
+// Make sure layout module is loaded
 LayoutExecutor.ensure()
 
-export function applyHierarchicLayout() {
-    // Applying a hierarchic layout in an animated fashion.
+export function applyHierarchicalLayout() {
+    // Applying a hierarchical layout in an animated fashion.
     gc.applyLayoutAnimated({
         layout: new HierarchicalLayout(),
         animationDuration: '0.2s'

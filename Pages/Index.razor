@@ -11,7 +11,7 @@
 
 @code {
     // Store the people with their node's id.
-    private Dictionary<Person, int> Dict = new();
+    private Dictionary<Person, int> persons = new();
 
     // Store the selected person.
     private Person? selectedPerson = null;
@@ -44,28 +44,28 @@
         // Create the hierarchy.
         var hierarchy = Hierarchy.CreateRandomHierarchy();
 
-        // Create nodes for the people and store the ids with the corresponding person in 'Dict'.
+        // Create nodes for the people and store the ids with the corresponding person in 'persons'.
         foreach (var person in hierarchy.People)
         {
-            int id = await communicator.CreateNodeAsync(person.ToString(), new Rect(0, 0, 130, 40));
-            this.Dict.Add(person, id);
+            int id = await communicator.CreateNodeAsync(person.ToString(), new Rectangle(0, 0, 130, 40));
+            this.persons.Add(person, id);
         }
 
-        // For each link, add an edge. We know the ids of the people's node from 'Dict'.
+        // For each link, add an edge. We know the ids of the people's node from 'persons'.
         foreach (var link in hierarchy.Links)
         {
-            await communicator.CreateEdgeAsync(this.Dict[link.Item1], this.Dict[link.Item2]);
+            await communicator.CreateEdgeAsync(this.persons[link.Item1], this.persons[link.Item2]);
         }
 
-        // Finally, apply a hierarchic layout.
-        await communicator.ApplyHierarchicLayout();
+        // Finally, apply a hierarchical layout.
+        await communicator.ApplyHierarchicalLayout();
     }
 
     [JSInvokable]
     public void SetSelectedPerson(int id)
     {
         // Loop through the people with their ids and find out the selected person.
-        foreach (var i in this.Dict)
+        foreach (var i in this.persons)
         {
             if (i.Value == id)
             {
